@@ -13,10 +13,8 @@ export interface LoginState {
 
 export const requestLogin = createAsyncThunk(
   "login/requestLogin",
-  async (data: { email: string; password: string }) => {
-    const response = await login(data.email, data.password);
-    return response;
-  }
+  async (data: { email: string; password: string }) =>
+    login(data.email, data.password)
 );
 
 export const requestLogout = createAsyncThunk("logout/requestLogout", logout);
@@ -62,10 +60,6 @@ export const loginSlice = createSlice({
         httpClient.setToken(action.payload.token);
       })
       .addCase(requestLogin.rejected, (state, action) => {
-        console.log(
-          "🚀 ~ file: loginSlice.ts ~ line 62 ~ .addCase ~ action",
-          action
-        );
         state.status = "failed";
         state.error = "Something went wrong";
       })

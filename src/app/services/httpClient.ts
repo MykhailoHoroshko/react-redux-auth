@@ -17,17 +17,21 @@ class FetchApiClient {
     this.token = token;
   }
 
-  async get<T>(options: GetOptions): Promise<T> {
+  getHeaders(baseHeaders?: Record<string, string>): Headers {
     const headers = new Headers({
       "Content-Type": "application/json",
-      ...options.headers,
+      ...baseHeaders,
     });
     if (this.token) {
       headers.append("Authorization", `Bearer ${this.token}`);
     }
+    return headers;
+  }
+
+  async get<T>(options: GetOptions): Promise<T> {
     const response = await fetch(options.url, {
       method: "get",
-      headers,
+      headers: this.getHeaders(options.headers),
     });
 
     if (response.ok) {
@@ -38,16 +42,9 @@ class FetchApiClient {
   }
 
   async post<T>(options: PostOptions): Promise<T> {
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      ...options.headers,
-    });
-    if (this.token) {
-      headers.append("Authorization", `Bearer ${this.token}`);
-    }
     const response = await fetch(options.url, {
       method: "post",
-      headers,
+      headers: this.getHeaders(options.headers),
       body: JSON.stringify(options.body),
     });
 
@@ -59,16 +56,9 @@ class FetchApiClient {
   }
 
   async put<T>(options: PutOptions): Promise<T> {
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      ...options.headers,
-    });
-    if (this.token) {
-      headers.append("Authorization", `Bearer ${this.token}`);
-    }
     const response = await fetch(options.url, {
       method: "put",
-      headers,
+      headers: this.getHeaders(options.headers),
       body: JSON.stringify(options.body),
     });
 
@@ -80,16 +70,9 @@ class FetchApiClient {
   }
 
   async delete<T>(options: PostOptions): Promise<T> {
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      ...options.headers,
-    });
-    if (this.token) {
-      headers.append("Authorization", `Bearer ${this.token}`);
-    }
     const response = await fetch(options.url, {
       method: "delete",
-      headers,
+      headers: this.getHeaders(options.headers),
       body: JSON.stringify(options.body),
     });
 
